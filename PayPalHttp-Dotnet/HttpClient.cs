@@ -100,5 +100,24 @@ namespace PayPalHttp
 				throw new HttpException(response.StatusCode, response.Headers, responseBody);
             }
         }
+
+        public virtual async Task<HttpResponseMessage> ExecuteRaw<T>(T req) where T : HttpRequest
+        {
+            var request = req.Clone<T>();
+
+            foreach (var injector in _injectors)
+            {
+                request = await injector.InjectAsync(request).ConfigureAwait(false);
+            }
+
+            request.RequestUri = new Uri(_environment.BaseUrl() + request.Path);
+
+            if (request.Body != null)
+            {
+                request.Content = await Encoder.SerializeRequestAsync(request).ConfigureAwait(false);
+            }
+
+            return await _client.SendAsync(request).ConfigureAwait(false);           
+        }
     }
 }
