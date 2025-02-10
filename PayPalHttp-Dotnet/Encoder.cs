@@ -11,7 +11,7 @@ namespace PayPalHttp
 {
     public class Encoder
     {
-        private static readonly Dictionary<string, ISerializer> DefaultSerializers = new();
+        private static readonly Dictionary<string, ISerializer> DefaultSerializers = [];
 
         private readonly Dictionary<string, ISerializer> _serializerLookup;
 

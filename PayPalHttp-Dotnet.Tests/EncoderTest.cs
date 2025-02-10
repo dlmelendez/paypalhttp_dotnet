@@ -21,8 +21,8 @@ namespace PayPalHttp.Tests
             var encoder = new Encoder();
             try
             {
-                _ = await encoder.SerializeRequestAsync(request).ConfigureAwait(false);
-                Assert.True(false, "Serialize request did not throw an IOException");
+                _ = await encoder.SerializeRequestAsync(request);
+                Assert.Fail("Serialize request did not throw an IOException");
             }
             catch (System.IO.IOException e)
             {
@@ -38,8 +38,8 @@ namespace PayPalHttp.Tests
             var encoder = new Encoder();
             try
             {
-                _ = await encoder.SerializeRequestAsync(request).ConfigureAwait(false);
-                Assert.True(false, "Serialize request did not throw an IOException");
+                _ = await encoder.SerializeRequestAsync(request);
+                Assert.Fail("Serialize request did not throw an IOException");
             }
             catch (System.IO.IOException e)
             {
@@ -58,10 +58,10 @@ namespace PayPalHttp.Tests
             };
 
             var encoder = new Encoder();
-            var content = await encoder.SerializeRequestAsync(request).ConfigureAwait(false);
+            var content = await encoder.SerializeRequestAsync(request);
             Assert.StartsWith("application/json", content.Headers.ContentType.ToString());
 
-            var jsonString = await content.ReadAsStringAsync().ConfigureAwait(false);
+            var jsonString = await content.ReadAsStringAsync();
 
             Assert.Equal("{\"name\":\"paypal\"}", jsonString);
         }
@@ -77,10 +77,10 @@ namespace PayPalHttp.Tests
             };
 
             var encoder = new Encoder();
-            var content = await encoder.SerializeRequestAsync(request).ConfigureAwait(false);
+            var content = await encoder.SerializeRequestAsync(request);
             Assert.StartsWith("application/json", content.Headers.ContentType.ToString());
 
-            var jsonString = await content.ReadAsStringAsync().ConfigureAwait(false);
+            var jsonString = await content.ReadAsStringAsync();
 
             Assert.Equal("{\"name\":\"paypal\"}", jsonString);
         }
@@ -98,7 +98,7 @@ namespace PayPalHttp.Tests
             };
 
             var encoder = new Encoder();
-            var content = await encoder.SerializeRequestAsync(request).ConfigureAwait(false);
+            var content = await encoder.SerializeRequestAsync(request);
             Assert.StartsWith("multipart/form-data; boundary=", content.Headers.ContentType.ToString());
             Assert.DoesNotContain("\"", content.Headers.ContentType.ToString());
         }
@@ -116,7 +116,7 @@ namespace PayPalHttp.Tests
             };
 
             var encoder = new Encoder();
-            var content = await encoder.SerializeRequestAsync(request).ConfigureAwait(false);
+            var content = await encoder.SerializeRequestAsync(request);
             Assert.StartsWith("multipart/form-data; boundary=", content.Headers.ContentType.ToString());
             Assert.DoesNotContain("\"", content.Headers.ContentType.ToString());
         }
@@ -138,9 +138,9 @@ namespace PayPalHttp.Tests
             };
 
             var encoder = new Encoder();
-            var content = await encoder.SerializeRequestAsync(request).ConfigureAwait(false);
+            var content = await encoder.SerializeRequestAsync(request);
 
-            var body = await content.ReadAsStringAsync().ConfigureAwait(false);
+            var body = await content.ReadAsStringAsync();
             Assert.Contains("{\"key\":\"val\"}", body);
             Assert.Contains("Content-Type: application/json", body);
             Assert.Contains("Content-Disposition: form-data; name=\"input\"; filename=\"input.json\"", body);
@@ -166,9 +166,9 @@ namespace PayPalHttp.Tests
             };
 
             var encoder = new Encoder();
-            var content = await encoder.SerializeRequestAsync(request).ConfigureAwait(false);
+            var content = await encoder.SerializeRequestAsync(request);
 
-            var body = await content.ReadAsStringAsync().ConfigureAwait(false);
+            var body = await content.ReadAsStringAsync();
             Assert.Contains("{\"name\":\"paypal\"}", body);
             Assert.Contains("Content-Type: application/json", body);
             Assert.Contains("Content-Disposition: form-data; name=\"input\"; filename=\"input.json\"", body);
@@ -184,10 +184,10 @@ namespace PayPalHttp.Tests
             request.Body = "some plain text";
 
             var encoder = new Encoder();
-            var content = await encoder.SerializeRequestAsync(request).ConfigureAwait(false);
+            var content = await encoder.SerializeRequestAsync(request);
             Assert.StartsWith("text/plain", content.Headers.ContentType.ToString());
 
-            var textString = await content.ReadAsStringAsync().ConfigureAwait(false);
+            var textString = await content.ReadAsStringAsync();
             Assert.Equal("some plain text", textString);
         }
 
@@ -204,10 +204,10 @@ namespace PayPalHttp.Tests
             };
 
             var encoder = new Encoder();
-            var content = await encoder.SerializeRequestAsync(request).ConfigureAwait(false);
+            var content = await encoder.SerializeRequestAsync(request);
             Assert.StartsWith("application/x-www-form-urlencoded", content.Headers.ContentType.ToString());
 
-            var textString = await content.ReadAsStringAsync().ConfigureAwait(false);
+            var textString = await content.ReadAsStringAsync();
             Assert.Equal("hello=world&key=value&another_key=some+value+with+spaces", textString);
         }
 
@@ -226,8 +226,8 @@ namespace PayPalHttp.Tests
                 {"another_key", "some value with spaces"},
             };
 
-            var content = await encoder.SerializeRequestAsync(request).ConfigureAwait(false);
-            var buf = await content.ReadAsByteArrayAsync().ConfigureAwait(false);
+            var content = await encoder.SerializeRequestAsync(request);
+            var buf = await content.ReadAsByteArrayAsync();
 
             Assert.Equal(await GzipAsync("hello=world&key=value&another_key=some+value+with+spaces"), buf);
         }
@@ -240,8 +240,8 @@ namespace PayPalHttp.Tests
             var encoder = new Encoder();
             try
             {
-                var content = await encoder.DeserializeResponseAsync(responseContent, typeof(String)).ConfigureAwait(false);
-                Assert.True(false, "Should throw IOException with unsupported content type");
+                var content = await encoder.DeserializeResponseAsync(responseContent, typeof(String));
+                Assert.Fail("Should throw IOException with unsupported content type");
             }
             catch (System.IO.IOException ex)
             {
@@ -258,8 +258,8 @@ namespace PayPalHttp.Tests
             var encoder = new Encoder();
             try
             {
-                var content = await encoder.DeserializeResponseAsync(responseContent, typeof(String)).ConfigureAwait(false);
-                Assert.True(false, "Should throw IOException with missing content type header");
+                var content = await encoder.DeserializeResponseAsync(responseContent, typeof(String));
+                Assert.Fail("Should throw IOException with missing content type header");
             }
             catch (System.IO.IOException ex)
             {
@@ -273,7 +273,7 @@ namespace PayPalHttp.Tests
             var responseContent = new StringContent("{\"name\":\"paypal\"}", Encoding.UTF8, "application/json");
 
             var encoder = new Encoder();
-            var content = await encoder.DeserializeResponseAsync(responseContent, typeof(TestData)).ConfigureAwait(false);
+            var content = await encoder.DeserializeResponseAsync(responseContent, typeof(TestData));
 
             Assert.NotNull(content);
             Assert.Equal("paypal", ((TestData)content).Name);
@@ -285,7 +285,7 @@ namespace PayPalHttp.Tests
             var responseContent = new StringContent("{\"name\":\"paypal\"}", Encoding.UTF8, "application/JSON");
 
             var encoder = new Encoder();
-            var content = await encoder.DeserializeResponseAsync(responseContent, typeof(TestData)).ConfigureAwait(false);
+            var content = await encoder.DeserializeResponseAsync(responseContent, typeof(TestData));
 
             Assert.NotNull(content);
             Assert.Equal("paypal", ((TestData)content).Name);
@@ -297,7 +297,7 @@ namespace PayPalHttp.Tests
             var responseContent = new StringContent("some plain text", Encoding.UTF8, "text/plain");
 
             var encoder = new Encoder();
-            var content = await encoder.DeserializeResponseAsync(responseContent, typeof(String)).ConfigureAwait(false);
+            var content = await encoder.DeserializeResponseAsync(responseContent, typeof(String));
 
             Assert.NotNull(content);
             Assert.Equal("some plain text", content);
@@ -309,7 +309,7 @@ namespace PayPalHttp.Tests
             var responseContent = new StringContent("some plain text", Encoding.UTF8, "text/PLAIN");
 
             var encoder = new Encoder();
-            var content = await encoder.DeserializeResponseAsync(responseContent, typeof(String)).ConfigureAwait(false);
+            var content = await encoder.DeserializeResponseAsync(responseContent, typeof(String));
 
             Assert.NotNull(content);
             Assert.Equal("some plain text", content);
@@ -323,8 +323,8 @@ namespace PayPalHttp.Tests
             var encoder = new Encoder();
             try
             {
-                var content = await encoder.DeserializeResponseAsync(responseContent, typeof(String)).ConfigureAwait(false);
-                Assert.True(false, "We do not deserialize multipart data");
+                var content = await encoder.DeserializeResponseAsync(responseContent, typeof(String));
+                Assert.Fail("We do not deserialize multipart data");
             }
             catch (System.IO.IOException ex)
             {
@@ -340,8 +340,8 @@ namespace PayPalHttp.Tests
             var encoder = new Encoder();
             try
             {
-                var content = await encoder.DeserializeResponseAsync(responseContent, typeof(String)).ConfigureAwait(false);
-                Assert.True(false, "form encoded deserialization not supported");
+                var content = await encoder.DeserializeResponseAsync(responseContent, typeof(String));
+                Assert.Fail("form encoded deserialization not supported");
             }
             catch (System.IO.IOException ex)
             {
@@ -360,7 +360,7 @@ namespace PayPalHttp.Tests
             responseContent.Headers.Add("Content-Type", "text/plain");
             responseContent.Headers.ContentEncoding.Add("gzip");
 
-            var deserializedContent = await encoder.DeserializeResponseAsync(responseContent, typeof(string)).ConfigureAwait(false);
+            var deserializedContent = await encoder.DeserializeResponseAsync(responseContent, typeof(string));
 
             Assert.Equal(content, deserializedContent);
         }
@@ -372,7 +372,7 @@ namespace PayPalHttp.Tests
             using var mso = new MemoryStream();
             using (var gs = new GZipStream(mso, CompressionMode.Compress))
             {
-                await msi.CopyToAsync(gs).ConfigureAwait(false);
+                await msi.CopyToAsync(gs);
             }
 
             return mso.ToArray();

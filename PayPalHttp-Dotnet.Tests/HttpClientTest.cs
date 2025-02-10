@@ -52,7 +52,7 @@ namespace PayPalHttp.Tests
             try
             {
                 await Client().Execute(request);
-                Assert.True(false, "Expected client.Execute to throw HttpException");
+                Assert.Fail("Expected client.Execute to throw HttpException");
             }
             catch (PayPalHttp.HttpException e)
             {

@@ -10,11 +10,7 @@ namespace PayPalHttp
     public partial class JsonSerializer : ISerializer
     {
         private const string RegExPattern = "application/json";
-#if NET7_0_OR_GREATER
         private static readonly Regex _pattern = ContextTypeRegEx();
-#else
-        private static readonly Regex _pattern = new(RegExPattern, RegexOptions.Compiled);
-#endif
 
         public async Task<object> DecodeAsync(HttpContent content, Type responseType)
         {
@@ -44,9 +40,7 @@ namespace PayPalHttp
             return RegExPattern;
         }
 
-#if NET7_0_OR_GREATER
         [GeneratedRegex(RegExPattern, RegexOptions.Compiled)]
         private static partial Regex ContextTypeRegEx();
-#endif
     }
 }
