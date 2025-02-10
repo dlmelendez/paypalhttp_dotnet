@@ -11,11 +11,8 @@ namespace PayPalHttp
     public partial class MultipartSerializer : ISerializer
     {
         private const string RegExPattern = "^multipart/.*$";
-#if NET7_0_OR_GREATER
         private static readonly Regex _pattern = ContentTypeRegEx();
-#else
-        private static readonly Regex _pattern = new(RegExPattern, RegexOptions.Compiled);
-#endif
+
         public Task<object> DecodeAsync(HttpContent content, Type responseType)
         {
             throw new IOException($"Unable to deserialize Content-Type: multipart/form-data.");
@@ -93,9 +90,7 @@ namespace PayPalHttp
             return RegExPattern;
         }
 
-#if NET7_0_OR_GREATER
         [GeneratedRegex(RegExPattern, RegexOptions.Compiled)]
         private static partial Regex ContentTypeRegEx();
-#endif
     }
 }

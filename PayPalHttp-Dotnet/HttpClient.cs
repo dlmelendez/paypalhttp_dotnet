@@ -9,7 +9,7 @@ namespace PayPalHttp
     public class HttpClient
     {               
         private readonly System.Net.Http.HttpClient _client;
-        private readonly List<IInjector> _injectors = new();
+        private readonly List<IInjector> _injectors = [];
         protected TimeSpan _timeout = TimeSpan.FromMinutes(5); //5 minute http pool default timeout
         protected readonly IEnvironment _environment;
 
@@ -22,16 +22,9 @@ namespace PayPalHttp
         {
             _environment = environment;
             Encoder = new Encoder();
-#if NET6_0_OR_GREATER
             _client = GetHttpClient(environment.BaseUrl());
-#else
-            _client = new System.Net.Http.HttpClient();
-            _client.BaseAddress = new Uri(environment.BaseUrl());
-            _client.DefaultRequestHeaders.Add("User-Agent", GetUserAgent());
-#endif
         }
 
-#if NET6_0_OR_GREATER
         protected virtual SocketsHttpHandler GetHttpSocketHandler()
         {
             return new SocketsHttpHandler() {  PooledConnectionLifetime = _timeout };
@@ -49,7 +42,7 @@ namespace PayPalHttp
                 return client;
             });
         }
-#endif
+
         protected virtual string GetUserAgent()
         {
             return "PayPalHttp-Dotnet HTTP/1.1";

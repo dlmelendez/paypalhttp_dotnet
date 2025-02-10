@@ -11,11 +11,7 @@ namespace PayPalHttp
     public partial class FormEncodedSerializer: ISerializer
     {
         private const string RegExPattern = "application/x-www-form-urlencoded";
-#if NET7_0_OR_GREATER
         private static readonly Regex _pattern = ContentTypeRegEx();
-#else
-        private static readonly Regex _pattern = new(RegExPattern, RegexOptions.Compiled);
-#endif
 
         public Task<object> DecodeAsync(HttpContent content, Type responseType)
         {
@@ -42,9 +38,7 @@ namespace PayPalHttp
             return RegExPattern;
         }
 
-#if NET7_0_OR_GREATER
         [GeneratedRegex(RegExPattern, RegexOptions.Compiled)]
         private static partial Regex ContentTypeRegEx();
-#endif
     }
 }
