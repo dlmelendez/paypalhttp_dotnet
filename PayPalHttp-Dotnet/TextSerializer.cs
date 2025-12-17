@@ -12,7 +12,14 @@ namespace PayPalHttp
 
         public async Task<object> DecodeAsync(HttpContent content, Type responseType)
         {
-            return await content.ReadAsStringAsync().ConfigureAwait(false);
+            try
+            {
+                return await content.ReadAsStringAsync().ConfigureAwait(false);
+            }
+            finally
+            {
+                content.Dispose();
+            }
         }
 
         public async Task<HttpContent> EncodeAsync(HttpRequest request)

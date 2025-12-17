@@ -63,7 +63,7 @@ namespace PayPalHttp.Tests
                 Response.Create().WithStatusCode(200)
             );
 
-            var request = new HttpRequest("/", HttpMethod.Get);
+            using var request = new HttpRequest("/", HttpMethod.Get);
 
             var resp = await Client().Execute(request);
             Assert.Equal(System.Net.HttpStatusCode.OK, resp.StatusCode);
@@ -78,7 +78,7 @@ namespace PayPalHttp.Tests
                 Response.Create().WithStatusCode(204)
           );
 
-            var request = new HttpRequest("/", HttpMethod.Delete);
+            using var request = new HttpRequest("/", HttpMethod.Delete);
             var resp = await Client().Execute(request);
 
             Assert.Equal(HttpStatusCode.NoContent, resp.StatusCode);
@@ -94,7 +94,7 @@ namespace PayPalHttp.Tests
                 Response.Create().WithStatusCode(200)
             );
 
-            var request = new HttpRequest("/", HttpMethod.Get);
+            using var request = new HttpRequest("/", HttpMethod.Get);
             _ = await Client().Execute(request);
 
             Assert.Equal("PayPalHttp-Dotnet HTTP/1.1", GetLastRequest().RequestMessage.Headers["User-Agent"]);
@@ -111,7 +111,7 @@ namespace PayPalHttp.Tests
                 Response.Create().WithStatusCode(200)
             );
 
-            var request = new HttpRequest("/", HttpMethod.Post)
+            using var request = new HttpRequest("/", HttpMethod.Post)
             {
                 Body = "some text here",
                 ContentType = "text/plain"
@@ -131,7 +131,7 @@ namespace PayPalHttp.Tests
                 Response.Create().WithStatusCode(200)
             );
 
-            var request = new HttpRequest("/", HttpMethod.Post);
+            using var request = new HttpRequest("/", HttpMethod.Post);
 
             var response = await Client().Execute(request);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -149,7 +149,7 @@ namespace PayPalHttp.Tests
                 Response.Create().WithStatusCode(200)
             );
 
-            var request = new SimpleRequest();
+            using var request = new SimpleRequest();
 
             _ = await Client().Execute(request);
 
@@ -172,7 +172,7 @@ namespace PayPalHttp.Tests
                 Response.Create().WithStatusCode(200)
             );
 
-            var request = new HttpRequest("/", HttpMethod.Get);
+            using var request = new HttpRequest("/", HttpMethod.Get);
             var client = Client();
 
             client.AddInjector(new TestInjector());
@@ -191,7 +191,7 @@ namespace PayPalHttp.Tests
             ).RespondWith(
                 Response.Create().WithStatusCode(200)
             );
-            var request = new HttpRequest("/", HttpMethod.Post, typeof(void))
+            using var request = new HttpRequest("/", HttpMethod.Post, typeof(void))
             {
                 ContentType = "application/json",
                 Body = new TestData
@@ -243,7 +243,7 @@ namespace PayPalHttp.Tests
                 .WithBody("{\"name\":\"paypal\"}")
                 .WithHeader("Content-Type", "application/json; charset=utf-8")
             );
-            var request = new HttpRequest("/", HttpMethod.Get, typeof(TestData));
+            using var request = new HttpRequest("/", HttpMethod.Get, typeof(TestData));
 
             var response = await Client().Execute(request);
 
@@ -262,7 +262,7 @@ namespace PayPalHttp.Tests
                 .WithBody("{\"name\":\"paypal\"}")
                 .WithHeader("Content-Type", "application/JSON; charset=utf-8")
             );
-            var request = new HttpRequest("/", HttpMethod.Get, typeof(TestData));
+            using var request = new HttpRequest("/", HttpMethod.Get, typeof(TestData));
 
             var response = await Client().Execute(request);
 
@@ -279,7 +279,7 @@ namespace PayPalHttp.Tests
                 Response.Create().WithStatusCode(200)
             );
 
-            var request = new HttpRequest("/", HttpMethod.Get);
+            using var request = new HttpRequest("/", HttpMethod.Get);
             var client = Client();
 
             client.AddInjector(null);
