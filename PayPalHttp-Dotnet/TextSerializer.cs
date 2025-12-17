@@ -12,12 +12,12 @@ namespace PayPalHttp
 
         public async Task<object> DecodeAsync(HttpContent content, Type responseType)
         {
-            return await content.ReadAsStringAsync().ConfigureAwait(false);
+            return await content.ReadAsStringAsync();
         }
 
         public async Task<HttpContent> EncodeAsync(HttpRequest request)
         {
-            return await Task.FromResult(new StringContent(request.Body.ToString())).ConfigureAwait(false);
+            return await Task.FromResult(new StringContent(request.Body.ToString()));
         }
 
         public Regex GetContentRegEx()
