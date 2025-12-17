@@ -15,8 +15,10 @@ namespace PayPalHttp.Tests
         [Fact]
         public async Task SerializeRequest_throwsForUnsupportedContentType()
         {
-            var request = new HttpRequest("/", HttpMethod.Get);
-            request.ContentType = "application/not-supported";
+            var request = new HttpRequest("/", HttpMethod.Get)
+            {
+                ContentType = "application/not-supported"
+            };
 
             var encoder = new Encoder();
             try
@@ -50,15 +52,17 @@ namespace PayPalHttp.Tests
         [Fact]
         public async Task SerializeRequest_withJsonContentTypeAsync()
         {
-            var request = new HttpRequest("/", HttpMethod.Get);
-            request.ContentType = "application/json";
-            request.Body = new TestData
+            var request = new HttpRequest("/", HttpMethod.Get)
             {
-                Name = "paypal"
+                ContentType = "application/json",
+                Body = new TestData
+                {
+                    Name = "paypal"
+                }
             };
 
             var encoder = new Encoder();
-            var content = await encoder.SerializeRequestAsync(request);
+            using var content = await encoder.SerializeRequestAsync(request);
             Assert.StartsWith("application/json", content.Headers.ContentType.ToString());
 
             var jsonString = await content.ReadAsStringAsync();
@@ -69,15 +73,17 @@ namespace PayPalHttp.Tests
         [Fact]
         public async Task SerializeRequest_withJsonContentTypeAsyncCaseInsensitive()
         {
-            var request = new HttpRequest("/", HttpMethod.Get);
-            request.ContentType = "application/JSON";
-            request.Body = new TestData
+            var request = new HttpRequest("/", HttpMethod.Get)
             {
-                Name = "paypal"
+                ContentType = "application/JSON",
+                Body = new TestData
+                {
+                    Name = "paypal"
+                }
             };
 
             var encoder = new Encoder();
-            var content = await encoder.SerializeRequestAsync(request);
+            using var content = await encoder.SerializeRequestAsync(request);
             Assert.StartsWith("application/json", content.Headers.ContentType.ToString());
 
             var jsonString = await content.ReadAsStringAsync();
@@ -88,17 +94,19 @@ namespace PayPalHttp.Tests
         [Fact]
         public async Task SerializeRequest_withMultipartContentTypeAsync()
         {
-            var request = new HttpRequest("/", HttpMethod.Get);
-            request.ContentType = "multipart/form-data";
-            request.Body = new Dictionary<string, object>()
+            var request = new HttpRequest("/", HttpMethod.Get)
             {
-                {"hello", "world"},
-                {"something", "Else"},
-                {"myfile", File.Open("../../../../README.md", FileMode.Open)}
+                ContentType = "multipart/form-data",
+                Body = new Dictionary<string, object>()
+                {
+                    {"hello", "world"},
+                    {"something", "Else"},
+                    {"myfile", File.OpenRead("../../../../README.md")}
+                }
             };
 
             var encoder = new Encoder();
-            var content = await encoder.SerializeRequestAsync(request);
+            using var content = await encoder.SerializeRequestAsync(request);
             Assert.StartsWith("multipart/form-data; boundary=", content.Headers.ContentType.ToString());
             Assert.DoesNotContain("\"", content.Headers.ContentType.ToString());
         }
@@ -106,17 +114,19 @@ namespace PayPalHttp.Tests
         [Fact]
         public async Task SerializeRequest_withMultipartContentTypeAsyncCaseInsensitive()
         {
-            var request = new HttpRequest("/", HttpMethod.Get);
-            request.ContentType = "MULTIPART/form-data";
-            request.Body = new Dictionary<string, object>()
+            var request = new HttpRequest("/", HttpMethod.Get)
             {
-                {"hello", "world"},
-                {"something", "Else"},
-                {"myfile", File.Open("../../../../README.md", FileMode.Open)}
+                ContentType = "MULTIPART/form-data",
+                Body = new Dictionary<string, object>()
+                {
+                    {"hello", "world"},
+                    {"something", "Else"},
+                    {"myfile", File.OpenRead("../../../../README.md")}
+                }
             };
 
             var encoder = new Encoder();
-            var content = await encoder.SerializeRequestAsync(request);
+            using var content = await encoder.SerializeRequestAsync(request);
             Assert.StartsWith("multipart/form-data; boundary=", content.Headers.ContentType.ToString());
             Assert.DoesNotContain("\"", content.Headers.ContentType.ToString());
         }
@@ -129,16 +139,18 @@ namespace PayPalHttp.Tests
             inputStringContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             inputStringContent.Headers.Add("Content-Disposition", "form-data; name=\"input\"; filename=\"input.json\"");
 
-            var request = new HttpRequest("/", HttpMethod.Get);
-            request.ContentType = "multipart/form-data";
-            request.Body = new Dictionary<string, object>()
+            var request = new HttpRequest("/", HttpMethod.Get)
             {
-                {"input_key", inputStringContent},
-                {"myfile", File.Open("../../../../README.md", FileMode.Open)}
+                ContentType = "multipart/form-data",
+                Body = new Dictionary<string, object>()
+                {
+                    {"input_key", inputStringContent},
+                    {"myfile", File.OpenRead("../../../../README.md")}
+                }
             };
 
             var encoder = new Encoder();
-            var content = await encoder.SerializeRequestAsync(request);
+            using var content = await encoder.SerializeRequestAsync(request);
 
             var body = await content.ReadAsStringAsync();
             Assert.Contains("{\"key\":\"val\"}", body);
@@ -157,16 +169,18 @@ namespace PayPalHttp.Tests
             };
             var jsonPart = new JsonPartContent("input", inputJSON);
 
-            var request = new HttpRequest("/", HttpMethod.Get);
-            request.ContentType = "multipart/form-data";
-            request.Body = new Dictionary<string, object>()
+            var request = new HttpRequest("/", HttpMethod.Get)
             {
-                {"input_key", jsonPart},
-                {"myfile", File.Open("../../../../README.md", FileMode.Open)}
+                ContentType = "multipart/form-data",
+                Body = new Dictionary<string, object>()
+                {
+                    {"input_key", jsonPart},
+                    {"myfile", File.OpenRead("../../../../README.md")}
+                }
             };
 
             var encoder = new Encoder();
-            var content = await encoder.SerializeRequestAsync(request);
+            using var content = await encoder.SerializeRequestAsync(request);
 
             var body = await content.ReadAsStringAsync();
             Assert.Contains("{\"name\":\"paypal\"}", body);
@@ -179,12 +193,14 @@ namespace PayPalHttp.Tests
         [Fact]
         public async Task SerializeRequest_withTextContentTypeAsync()
         {
-            var request = new HttpRequest("/", HttpMethod.Get);
-            request.ContentType = "text/plain";
-            request.Body = "some plain text";
+            var request = new HttpRequest("/", HttpMethod.Get)
+            {
+                ContentType = "text/plain",
+                Body = "some plain text"
+            };
 
             var encoder = new Encoder();
-            var content = await encoder.SerializeRequestAsync(request);
+            using var content = await encoder.SerializeRequestAsync(request);
             Assert.StartsWith("text/plain", content.Headers.ContentType.ToString());
 
             var textString = await content.ReadAsStringAsync();
@@ -194,17 +210,19 @@ namespace PayPalHttp.Tests
         [Fact]
         public async Task SerializeReqeust_withFormEncodedContentType()
         {
-            var request = new HttpRequest("/", HttpMethod.Get);
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.Body = new Dictionary<string, string>()
+            var request = new HttpRequest("/", HttpMethod.Get)
             {
-                {"hello", "world"},
-                {"key", "value"},
-                {"another_key", "some value with spaces"},
+                ContentType = "application/x-www-form-urlencoded",
+                Body = new Dictionary<string, string>()
+                {
+                    {"hello", "world"},
+                    {"key", "value"},
+                    {"another_key", "some value with spaces"},
+                }
             };
 
             var encoder = new Encoder();
-            var content = await encoder.SerializeRequestAsync(request);
+            using var content = await encoder.SerializeRequestAsync(request);
             Assert.StartsWith("application/x-www-form-urlencoded", content.Headers.ContentType.ToString());
 
             var textString = await content.ReadAsStringAsync();
@@ -215,18 +233,19 @@ namespace PayPalHttp.Tests
         public async Task SerializeRequest_withGzipContentEncoding()
         {
             var encoder = new Encoder();
-            var request = new HttpRequest("/", HttpMethod.Get);
-
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.ContentEncoding = "gzip";
-            request.Body = new Dictionary<string, string>()
+            var request = new HttpRequest("/", HttpMethod.Get)
             {
-                {"hello", "world"},
-                {"key", "value"},
-                {"another_key", "some value with spaces"},
+                ContentType = "application/x-www-form-urlencoded",
+                ContentEncoding = "gzip",
+                Body = new Dictionary<string, string>()
+                {
+                    {"hello", "world"},
+                    {"key", "value"},
+                    {"another_key", "some value with spaces"},
+                }
             };
 
-            var content = await encoder.SerializeRequestAsync(request);
+            using var content = await encoder.SerializeRequestAsync(request);
             var buf = await content.ReadAsByteArrayAsync();
 
             Assert.Equal(await GzipAsync("hello=world&key=value&another_key=some+value+with+spaces"), buf);

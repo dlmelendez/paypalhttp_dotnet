@@ -50,7 +50,7 @@ namespace PayPalHttp
 
         public void AddInjector(IInjector injector)
         {
-            if (injector != null)
+            if (injector is not null)
             {
                 _injectors.Add(injector);
             }
@@ -71,27 +71,37 @@ namespace PayPalHttp
 
             request.RequestUri = new Uri(_environment.BaseUrl() + request.Path);
 
-            if (request.Body != null)
+            if (request.Body is not null)
             {
                 request.Content = await Encoder.SerializeRequestAsync(request).ConfigureAwait(false);
             }
+                
+            var response = await _client.SendAsync(request).ConfigureAwait(false);
 
-			var response = await _client.SendAsync(request).ConfigureAwait(false);
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                object responseBody = null;
-                if (response.Content.Headers.ContentType != null)
+
+                if (response.IsSuccessStatusCode)
                 {
-                    responseBody = await Encoder.DeserializeResponseAsync(response.Content, request.ResponseType).ConfigureAwait(false);
+                    object responseBody = null;
+                    if (response.Content.Headers.ContentType is not null)
+                    {
+                        responseBody = await Encoder.DeserializeResponseAsync(response.Content, request.ResponseType).ConfigureAwait(false);
+                    }
+                    return new HttpResponse(response.Headers, response.StatusCode, responseBody);
                 }
-                return new HttpResponse(response.Headers, response.StatusCode, responseBody);
+                else
+                {
+                    var responseBody = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    throw new HttpException(response.StatusCode, response.Headers, responseBody);
+                }
             }
-            else
+            finally
             {
-				var responseBody = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-				throw new HttpException(response.StatusCode, response.Headers, responseBody);
+                request.Dispose();
+                response.Content?.Dispose();
             }
+
         }
 
         public virtual async Task<HttpResponseMessage> ExecuteRaw<T>(T req) where T : HttpRequest
@@ -105,12 +115,19 @@ namespace PayPalHttp
 
             request.RequestUri = new Uri(_environment.BaseUrl() + request.Path);
 
-            if (request.Body != null)
+            if (request.Body is not null)
             {
                 request.Content = await Encoder.SerializeRequestAsync(request).ConfigureAwait(false);
             }
 
-            return await _client.SendAsync(request).ConfigureAwait(false);           
+            try
+            {
+                return await _client.SendAsync(request).ConfigureAwait(false);
+            }
+            finally
+            {
+                request.Dispose();
+            }
         }
     }
 }
