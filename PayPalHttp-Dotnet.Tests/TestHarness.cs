@@ -35,7 +35,8 @@ namespace PayPalHttp.Tests
     	public void Dispose()
     	{
     		server.Stop();
-    	}
+            GC.SuppressFinalize(this);
+        }
 
         protected PayPalHttp.HttpClient Client()
         {
