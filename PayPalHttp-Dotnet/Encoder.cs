@@ -76,7 +76,8 @@ namespace PayPalHttp
             if ("gzip".Equals(contentEncoding))
             {
                 var buf = await content.ReadAsByteArrayAsync();
-                content = new StringContent(await GunzipAsync(buf), Encoding.UTF8);
+                using var decompressedContent = new StringContent(await GunzipAsync(buf), Encoding.UTF8);
+                return await serializer.DecodeAsync(decompressedContent, responseType);
             }
 
             return await serializer.DecodeAsync(content, responseType);
