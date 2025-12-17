@@ -101,7 +101,7 @@ namespace PayPalHttp.Tests
                 {
                     {"hello", "world"},
                     {"something", "Else"},
-                    {"myfile", File.Open("../../../../README.md", FileMode.Open)}
+                    {"myfile", File.OpenRead("../../../../README.md")}
                 }
             };
 
@@ -121,7 +121,7 @@ namespace PayPalHttp.Tests
                 {
                     {"hello", "world"},
                     {"something", "Else"},
-                    {"myfile", File.Open("../../../../README.md", FileMode.Open)}
+                    {"myfile", File.OpenRead("../../../../README.md")}
                 }
             };
 
@@ -145,7 +145,7 @@ namespace PayPalHttp.Tests
                 Body = new Dictionary<string, object>()
                 {
                     {"input_key", inputStringContent},
-                    {"myfile", File.Open("../../../../README.md", FileMode.Open)}
+                    {"myfile", File.OpenRead("../../../../README.md")}
                 }
             };
 
