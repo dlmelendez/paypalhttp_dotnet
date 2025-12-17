@@ -62,7 +62,7 @@ namespace PayPalHttp.Tests
             };
 
             var encoder = new Encoder();
-            var content = await encoder.SerializeRequestAsync(request);
+            using var content = await encoder.SerializeRequestAsync(request);
             Assert.StartsWith("application/json", content.Headers.ContentType.ToString());
 
             var jsonString = await content.ReadAsStringAsync();
@@ -83,7 +83,7 @@ namespace PayPalHttp.Tests
             };
 
             var encoder = new Encoder();
-            var content = await encoder.SerializeRequestAsync(request);
+            using var content = await encoder.SerializeRequestAsync(request);
             Assert.StartsWith("application/json", content.Headers.ContentType.ToString());
 
             var jsonString = await content.ReadAsStringAsync();
@@ -106,7 +106,7 @@ namespace PayPalHttp.Tests
             };
 
             var encoder = new Encoder();
-            var content = await encoder.SerializeRequestAsync(request);
+            using var content = await encoder.SerializeRequestAsync(request);
             Assert.StartsWith("multipart/form-data; boundary=", content.Headers.ContentType.ToString());
             Assert.DoesNotContain("\"", content.Headers.ContentType.ToString());
         }
@@ -126,7 +126,7 @@ namespace PayPalHttp.Tests
             };
 
             var encoder = new Encoder();
-            var content = await encoder.SerializeRequestAsync(request);
+            using var content = await encoder.SerializeRequestAsync(request);
             Assert.StartsWith("multipart/form-data; boundary=", content.Headers.ContentType.ToString());
             Assert.DoesNotContain("\"", content.Headers.ContentType.ToString());
         }
@@ -150,7 +150,7 @@ namespace PayPalHttp.Tests
             };
 
             var encoder = new Encoder();
-            var content = await encoder.SerializeRequestAsync(request);
+            using var content = await encoder.SerializeRequestAsync(request);
 
             var body = await content.ReadAsStringAsync();
             Assert.Contains("{\"key\":\"val\"}", body);
@@ -180,7 +180,7 @@ namespace PayPalHttp.Tests
             };
 
             var encoder = new Encoder();
-            var content = await encoder.SerializeRequestAsync(request);
+            using var content = await encoder.SerializeRequestAsync(request);
 
             var body = await content.ReadAsStringAsync();
             Assert.Contains("{\"name\":\"paypal\"}", body);
@@ -200,7 +200,7 @@ namespace PayPalHttp.Tests
             };
 
             var encoder = new Encoder();
-            var content = await encoder.SerializeRequestAsync(request);
+            using var content = await encoder.SerializeRequestAsync(request);
             Assert.StartsWith("text/plain", content.Headers.ContentType.ToString());
 
             var textString = await content.ReadAsStringAsync();
@@ -222,7 +222,7 @@ namespace PayPalHttp.Tests
             };
 
             var encoder = new Encoder();
-            var content = await encoder.SerializeRequestAsync(request);
+            using var content = await encoder.SerializeRequestAsync(request);
             Assert.StartsWith("application/x-www-form-urlencoded", content.Headers.ContentType.ToString());
 
             var textString = await content.ReadAsStringAsync();
@@ -245,7 +245,7 @@ namespace PayPalHttp.Tests
                 }
             };
 
-            var content = await encoder.SerializeRequestAsync(request);
+            using var content = await encoder.SerializeRequestAsync(request);
             var buf = await content.ReadAsByteArrayAsync();
 
             Assert.Equal(await GzipAsync("hello=world&key=value&another_key=some+value+with+spaces"), buf);
