@@ -49,7 +49,7 @@ namespace PayPalHttp
                     try
                     {
                         MemoryStream memoryStream = new();
-                        await file.CopyToAsync(memoryStream);
+                        await file.CopyToAsync(memoryStream).ConfigureAwait(false);
                         var fileContent = new ByteArrayContent(memoryStream.ToArray());
                         var fileName = Path.GetFileName(file.Name);
                         // This is necessary to quote values since the web server is picky; .NET normally does not quote
