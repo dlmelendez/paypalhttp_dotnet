@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
-	<LangVersion>13.0</LangVersion>
+	<TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+	<LangVersion>14.0</LangVersion>
     <Title>ElCamino.PayPalHttp</Title>
 	<AssemblyName>ElCamino.PayPalHttp</AssemblyName>
 	  
@@ -18,7 +18,7 @@
 	<RepositoryUrl>https://github.com/dlmelendez/paypalhttp_dotnet.git</RepositoryUrl>
 	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 
-	<Version>2.1.0</Version>
+	<Version>2.5.0</Version>
 	  <PackageProjectUrl>https://github.com/dlmelendez/paypalhttp_dotnet</PackageProjectUrl>
 	  <!--<DebugType>Full</DebugType>-->
 	  <!-- DebugType Full is needed for test code coverage, but .nuget symbols doesn't like it-->
@@ -28,7 +28,7 @@
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <NeutralLanguage>en-US</NeutralLanguage>
 
-	  <Copyright>Copyright PayPal, Inc. 2019 / Copyright ©  2022 David Melendez, MIT License</Copyright>
+	  <Copyright>Copyright PayPal, Inc. 2019 / Copyright ©  2025 David Melendez, MIT License</Copyright>
     <Description>Improved regex and threading performance over deprecated PayPalHttp library. PayPalHttp is a generic http client designed to be used with code-generated projects.</Description>
     <Authors>PayPal, David Melendez</Authors>
     <PackageReleaseNotes>Release based on PayPalHttp library.</PackageReleaseNotes>
