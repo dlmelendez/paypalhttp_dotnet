@@ -30,7 +30,7 @@ namespace PayPalHttp
 
         private static void RegisterSerializer(ISerializer serializer, Dictionary<string, ISerializer> serializerLookup)
         {
-            if (serializer != null)
+            if (serializer is not null)
             {
                 serializerLookup[serializer.GetContentTypeRegexPattern()] = serializer;
             }
@@ -43,7 +43,7 @@ namespace PayPalHttp
 
         public async Task<HttpContent> SerializeRequestAsync(HttpRequest request)
         {
-            if (request.ContentType == null)
+            if (request.ContentType is null)
             {
                 throw new IOException("HttpRequest did not have content-type header set");
             }
@@ -64,7 +64,7 @@ namespace PayPalHttp
 
         public async Task<object> DeserializeResponseAsync(HttpContent content, Type responseType)
         {
-            if (content.Headers.ContentType == null)
+            if (content.Headers.ContentType is null)
             {
                 throw new IOException("HTTP response did not have content-type header set");
             }
@@ -84,7 +84,7 @@ namespace PayPalHttp
 
         private ISerializer GetSerializer(string contentType)
         {
-            return _serializerLookup.Values.FirstOrDefault(f => f.GetContentRegEx().Match(contentType).Success);
+            return _serializerLookup.Values.FirstOrDefault(f => f.GetContentRegEx().IsMatch(contentType));
         }
 
         private string GetSupportedContentTypes()

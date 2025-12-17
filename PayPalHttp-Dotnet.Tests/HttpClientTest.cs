@@ -1,21 +1,15 @@
-using PayPalHttp;
-using Xunit;
-using System;
-using System.Runtime.Serialization;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
+using System.Runtime.Serialization;
+using System.Threading.Tasks;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
-using WireMock.Matchers;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
+using Xunit;
 
 namespace PayPalHttp.Tests
 {
     [DataContract]
-    public class TestData
+    public record TestData
     {
         [DataMember(Name = "name")]
         public string Name;
@@ -117,9 +111,11 @@ namespace PayPalHttp.Tests
                 Response.Create().WithStatusCode(200)
             );
 
-            var request = new HttpRequest("/", HttpMethod.Post);
-            request.Body = "some text here";
-            request.ContentType = "text/plain";
+            var request = new HttpRequest("/", HttpMethod.Post)
+            {
+                Body = "some text here",
+                ContentType = "text/plain"
+            };
 
             var response = await Client().Execute(request);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -195,11 +191,13 @@ namespace PayPalHttp.Tests
             ).RespondWith(
                 Response.Create().WithStatusCode(200)
             );
-            var request = new HttpRequest("/", HttpMethod.Post, typeof(void));
-            request.ContentType = "application/json";
-            request.Body = new TestData
+            var request = new HttpRequest("/", HttpMethod.Post, typeof(void))
             {
-                Name = "paypal"
+                ContentType = "application/json",
+                Body = new TestData
+                {
+                    Name = "paypal"
+                }
             };
 
             var client = Client();
@@ -218,11 +216,13 @@ namespace PayPalHttp.Tests
             ).RespondWith(
                 Response.Create().WithStatusCode(200)
             );
-            var request = new HttpRequest("/", HttpMethod.Post, typeof(void));
-            request.ContentType = "application/JSON";
-            request.Body = new TestData
+            var request = new HttpRequest("/", HttpMethod.Post, typeof(void))
             {
-                Name = "paypal"
+                ContentType = "application/JSON",
+                Body = new TestData
+                {
+                    Name = "paypal"
+                }
             };
 
             var client = Client();

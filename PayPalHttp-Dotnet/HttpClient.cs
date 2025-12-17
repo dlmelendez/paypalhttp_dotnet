@@ -50,7 +50,7 @@ namespace PayPalHttp
 
         public void AddInjector(IInjector injector)
         {
-            if (injector != null)
+            if (injector is not null)
             {
                 _injectors.Add(injector);
             }
@@ -71,7 +71,7 @@ namespace PayPalHttp
 
             request.RequestUri = new Uri(_environment.BaseUrl() + request.Path);
 
-            if (request.Body != null)
+            if (request.Body is not null)
             {
                 request.Content = await Encoder.SerializeRequestAsync(request);
             }
@@ -81,7 +81,7 @@ namespace PayPalHttp
             if (response.IsSuccessStatusCode)
             {
                 object responseBody = null;
-                if (response.Content.Headers.ContentType != null)
+                if (response.Content.Headers.ContentType is not null)
                 {
                     responseBody = await Encoder.DeserializeResponseAsync(response.Content, request.ResponseType);
                 }
@@ -105,7 +105,7 @@ namespace PayPalHttp
 
             request.RequestUri = new Uri(_environment.BaseUrl() + request.Path);
 
-            if (request.Body != null)
+            if (request.Body is not null)
             {
                 request.Content = await Encoder.SerializeRequestAsync(request);
             }
